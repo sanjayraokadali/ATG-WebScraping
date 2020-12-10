@@ -3,5 +3,18 @@
 
 {% block bodyblock %}
 
+  <h2>Input URL Page</h2><br>
+  <a href="{% url 'basepage' %}">Home!</a>
+
+  <form action="{% url 'scrapeApp:datapage' %}" method="post">
+    {% csrf_token %}
+      <input type="url" name="" placeholder="Enter Websites url here to scrape!"><br>
+
+      <input type="submit" name="" value="Scrape it!">
+
+  </form>
+
+
+
 
 {% endblock %}
