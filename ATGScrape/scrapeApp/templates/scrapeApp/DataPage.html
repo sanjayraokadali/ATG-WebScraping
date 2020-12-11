@@ -5,9 +5,12 @@
 {% block bodyblock %}
   <h2> <strong> Data Page </strong> </h2>
 
+  {% for e in events %}
+
+    <p>{{ e.event_name }}  {{ e.event_date }}  {{ e.event_price }}  {{ e.event_venue }}</p><br>
   
+  {% endfor %}
 
 
 
-  {{ soup.as_p }}
 {% endblock %}

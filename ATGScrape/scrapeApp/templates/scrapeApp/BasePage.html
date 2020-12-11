@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -9,7 +10,8 @@
 
       {% block bodyblock %}
         <h2>Base Page</h2>
-        <a href="{% url 'scrapeApp:inputurlpage' %}">Input Page</a>
+
+        <a href="{% url 'scrapeApp:inputurlpage' %}" >Input Page</a>
 
       {% endblock %}
 
