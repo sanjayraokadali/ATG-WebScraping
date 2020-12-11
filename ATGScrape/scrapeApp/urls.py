@@ -6,7 +6,11 @@ app_name = 'scrapeApp'
 urlpatterns = [
 
     url(r'^$',views.InputURLPage,name='inputurlpage'),
-    url(r'^ScrapeData/$',views.DataPage,name='datapage'),
+    url(r'^InsiderData/$',views.DataPage,name='datapage'),
+    url(r'^ScrapeData/$',views.EventsHighURLPage,name='eventhighurlpage'),
+    url(r'^EventHighData/$',views.EventsHighDataPage,name='evenhighdatapage'),
+    url(r'^ScrapeData/$',views.NaadYogaURLPage,name='naadyogaurlpage'),
+    url(r'^NaadYogaData/$',views.NaadYogaDataPage,name='naadyogadatapage'),
 
 
 ]

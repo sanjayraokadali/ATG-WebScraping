@@ -74,3 +74,21 @@ def DataPage(request):
         df.to_excel('insider_event.xlsx', index = False, encoding='utf-8')
 
     return render(request,'scrapeApp/DataPage.html',{'events':ordered})
+
+def EventsHighURLPage(request):
+
+    return render(request,'scrapeApp/EventsHighURLPage.html')
+
+
+def EventsHighDataPage(request):
+
+    return render(request,'scrapeApp/EventsHighDataPage.html')
+
+
+def NaadYogaURLPage(request):
+
+    return render(request,'scrapeApp/NaadYogaURLPage.html')
+
+def NaadYogaDataPage(request):
+
+    return render(request,'scrapeApp/NaadYogaDataPage.html')
