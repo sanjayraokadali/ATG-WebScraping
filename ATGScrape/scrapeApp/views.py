@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from selenium import webdriver
-from bs4 import BeautifulSoup
 import pandas as pd
-import trafilatura
+
+from bs4 import BeautifulSoup
+import requests
 
 # Create your views here.
 def BasePage(request):
@@ -15,25 +15,36 @@ def InputURLPage(request):
 
 def DataPage(request):
 
-    driver = webdriver.Chrome(executable_path =r'C:\Users\raosa\Documents\ATG-WebScraping\chromedriver.exe')
-
     if request.method == 'POST':
 
         url = request.POST.get('url')
 
-        url = str(url)
+        html_text = requests.get(url).text
 
-        print('url: ' + url)
+        soup = BeautifulSoup(html_text, 'lxml')
 
-        driver.get("<a href=\"https://www.flipkart.com/laptops/\">https://www.flipkart.com/laptops/</a>~buyback-guarantee-on-laptops-/pr?sid=6bo%2Cb5g&amp;amp;amp;amp;amp;amp;amp;amp;amp;uniq")
+        events = soup.findAll('div', class_ = 'event-card-details-top')
+        price = soup.findAll('div', class_ = 'event-card-container')
 
-        content = driver.page_source
+        event_name = []
+        event_price = []
+        event_date = []
 
-        soup = BeautifulSoup(content)
+        for e,p in zip(events,price):
 
-        down = trafilatura.fetch_url(url)
-        temp_text = trafilatura.extract(down)
-        print(soup)
+            name= e.find('span', class_ = 'event-card-name-string').text
+            date = e.find('span', class_ = 'event-card-date').text
+            price = p.find('div', class_ = 'event-card-price').text
+
+            event_name.append(name)
+            event_date.append(date)
+            event_price.append(price)
 
 
-        return render(request,'scrapeApp/DataPage.html')
+        events.append(event_name)
+        events.append(event_date)
+        events.append(event_price)
+
+        print(events)
+
+    return render(request,'scrapeApp/DataPage.html',{'events':events})

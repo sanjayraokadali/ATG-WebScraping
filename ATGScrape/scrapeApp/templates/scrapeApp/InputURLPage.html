@@ -8,7 +8,7 @@
 
   <form action="{% url 'scrapeApp:datapage' %}" method="post">
     {% csrf_token %}
-      <input type="url" name="" placeholder="Enter Websites url here to scrape!"><br>
+      <input type="text" name="url" placeholder="Enter Websites url here to scrape!"><br>
 
       <input type="submit" name="" value="Scrape it!">
 
