@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import pandas as pd
 from scrapeApp.models import EventModel
-
+import operator
 from bs4 import BeautifulSoup
 import requests
 
@@ -21,6 +21,11 @@ def DataPage(request):
 
         url = request.POST.get('url')
 
+        url_li = url.split('/')
+
+
+        category = ' '.join(url_li[len(url_li)-1].split('-'))
+
         html_text = requests.get(url).text
 
         soup = BeautifulSoup(html_text, 'lxml')
@@ -36,15 +41,9 @@ def DataPage(request):
             venue = e.find('span', class_ = 'event-card-venue').text
 
 
-
-
-            # event_date.append(date)
-            # event_price.append(price)
-            # event_venue.append(venue)
-
             if EventModel.objects.count() == 0:
 
-                events = EventModel.objects.create(event_name = name, event_date = date, event_price = price, event_venue = venue)
+                events = EventModel.objects.create(event_name = name, event_date = date, event_price = price, event_venue = venue, event_category = category)
                 events.save()
 
             else:
@@ -61,9 +60,10 @@ def DataPage(request):
 
                 if name not in temp:
 
-                    events = EventModel.objects.create(event_name = name, event_date = date, event_price = price, event_venue = venue)
+                    events = EventModel.objects.create(event_name = name, event_date = date, event_price = price, event_venue = venue, event_category = category)
                     events.save()
 
-    events = EventModel.objects.all()
+    events = EventModel.objects.order_by('event_name')
+    ordered = sorted(events, key=operator.attrgetter('event_name'))
 
-    return render(request,'scrapeApp/DataPage.html',{'events':events})
+    return render(request,'scrapeApp/DataPage.html',{'events':ordered})

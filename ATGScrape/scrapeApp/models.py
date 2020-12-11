@@ -7,6 +7,7 @@ class EventModel(models.Model):
     event_date = models.CharField(max_length=300)
     event_price = models.CharField(max_length=30)
     event_venue = models.CharField(max_length=300)
+    event_category = models.CharField(max_length=300)
 
     def __str__(self):
 
