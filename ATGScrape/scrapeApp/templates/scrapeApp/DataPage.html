@@ -5,12 +5,23 @@
 {% block bodyblock %}
   <h2> <strong> Data Page </strong> </h2>
 
-  {% for e in events %}
 
-    <br>
-    <p>{{ e.event_name }} <br> {{ e.event_date }} <br> {{ e.event_price }} <br> {{ e.event_venue }}</p><br>
+    <div class="container">
+        {% for e in events %}
+        <div class="row">
+          <div class="col-sm">
+            <ul class="list-group">
+            <li class="list-group-item">{{ e.event_name }}</li>
+            <li class="list-group-item"> {{ e.event_date }}</li>
+            <li class="list-group-item">{{ e.event_price }}</li>
+            <li class="list-group-item"> {{ e.event_venue }}</li>
+            </ul>
+          </div>
+        </div>
+    {% endfor %}
+</div>
 
-  {% endfor %}
+
 
 
 

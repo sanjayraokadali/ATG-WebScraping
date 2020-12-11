@@ -60,20 +60,24 @@ def DataPage(request):
 
         events = EventModel.objects.order_by('event_name')
         ordered = sorted(events, key=operator.attrgetter('event_name'))
-        file = open('insider_event.csv', 'w')
+        file = open('insider_event.csv', 'w', encoding='utf-8')
         writer = csv.writer(file)
 
-        writer.writerow(['EVENT NAME','EVENT DATE & TIME','EVENT PRICE,','EVENT VENUE','EVENT CATEGORY'])
+        writer.writerow(['EVENT NAME','EVENT DATE & TIME','EVENT PRICE','EVENT VENUE','EVENT CATEGORY'])
 
         for item in ordered:
             writer.writerow([item.event_name,item.event_date,item.event_price,item.event_venue,item.event_category])
         file.close()
 
-        df = pd.read_csv('insider_event.csv',encoding='utf-8')
+        df = pd.read_csv('insider_event.csv', encoding='utf-8')
 
         df.to_excel('insider_event.xlsx', index = False, encoding='utf-8')
 
     return render(request,'scrapeApp/DataPage.html',{'events':ordered})
+
+
+
+
 
 def EventsHighURLPage(request):
 
