@@ -131,7 +131,7 @@ def EventsHighDataPage(request):
 
     html_text = requests.get(url).text
     soup = BeautifulSoup(html_text, 'lxml')
-    events = soup.find_all('div', class_ = 'm-sm-lr-16 browse-events-wrp')
+    events = soup.find_all('div', class_ = 'p-lr-sm-16 t-container browse-events-wrp')
 
 
     for e in events:
@@ -160,62 +160,68 @@ def CheckYogaURLPage(request):
 
 def NaadYogaDataPage(request):
 
-    url = request.POST.get('url')
+    yoga = YogaModel.objects.order_by('name')
+    ordered = sorted(yoga, key=operator.attrgetter('name'))
+    flag=True
 
-    data = InterestingURLModel.objects.create(interesting_url = url)
-    data.save()
+    if request.method == 'POST':
+
+        url = request.POST.get('url')
+
+        data = InterestingURLModel.objects.create(interesting_url = url)
+        data.save()
 
 
-    url_li = url.split('/')
-    location = ''.join(url_li[len(url_li)-1])
 
-    html_text = requests.get(url).text
-    soup = BeautifulSoup(html_text, 'lxml')
+        html_text = requests.get(url).text
+        soup = BeautifulSoup(html_text, 'lxml')
 
-    names = soup.findAll('td', class_ = 'column-1')
-    postcode = soup.findAll('td', class_ = 'column-3')
-    qualification = soup.findAll('td', class_ = 'column-4')
-    vision = soup.findAll('td', class_ = 'column-5')
-    link = soup.findAll('td', class_ = 'column-6')
+        names = soup.findAll('td', class_ = 'column-1')
+        postcode = soup.findAll('td', class_ = 'column-3')
+        qualification = soup.findAll('td', class_ = 'column-4')
+        vision = soup.findAll('td', class_ = 'column-5')
+        link = soup.findAll('td', class_ = 'column-6')
 
-    for e,p,q,v,l in zip(names,postcode,qualification,vision,link):
+        for e,p,q,v,l in zip(names,postcode,qualification,vision,link):
 
-        name = e.text
-        postcode = p.text
-        qualification = q.text
-        vision = v.text
-        link = l.text
+            name = e.text
+            postcode = p.text
+            qualification = q.text
+            vision = v.text
+            link = l.text
 
-        if YogaModel.objects.count == 0:
+            if YogaModel.objects.count == 0:
 
-            yoga = YogaModel.objects.create(name = name, postcode = postcode, qualification = qualification, vision = vision, link = link)
-            yoga.save()
-
-        else:
-            names = YogaModel.objects.all().values()
-            names = list(names)
-            temp = []
-
-            for i in range(len(names)):
-                temp.append(names[i]['name'])
-            if name not in temp:
-                flag =False
                 yoga = YogaModel.objects.create(name = name, postcode = postcode, qualification = qualification, vision = vision, link = link)
                 yoga.save()
+
+            else:
+                names = YogaModel.objects.all().values()
+                names = list(names)
+                temp = []
+
+                for i in range(len(names)):
+                    temp.append(names[i]['name'])
+
+                if name not in temp:
+                    flag =False
+                    yoga = YogaModel.objects.create(name = name, postcode = postcode, qualification = qualification, vision = vision, link = link)
+                    yoga.save()
 
 
     if flag == False:
 
         yoga = YogaModel.objects.order_by('name')
-        ordered = sorted(events, key=operator.attrgetter('name'))
-        file = open('yoga_event.csv', 'w', encoding='utf-8')
-        writer = csv.writer(file)
+        ordered = sorted(yoga, key=operator.attrgetter('name'))
+        yoga_file = open('yoga_event.csv', 'w', encoding='utf-8')
+        writer = csv.writer(yoga_file)
 
         writer.writerow(['INSTRUCTOR NAME','POSTCODE','QUALIFICATION','VISION','LINK'])
 
         for item in ordered:
             writer.writerow([item.name,item.postcode,item.qualification,item.vision,item.link])
-        file.close()
+
+        yoga_file.close()
 
         df = pd.read_csv('yoga_event.csv', encoding='utf-8')
 

@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 {% extends 'scrapeApp/BasePage.html' %}
 
-
-
-
 {% block bodyblock %}
 
 <form  action="{% url 'scrapeApp:naadyogadatapage' %}" method="post">
@@ -13,16 +10,16 @@
   <input type="hidden" name="url" value="{{ url }}">
     <iframe src="{{ url }}" width="1000" height="400" style=" border-color: black; "  >
     </iframe>
-
-    <input style=" text-align: center; " type="submit" name="" value="Scrape the website">
+    <br><br>
+    <input style=" position: relative; top:50%; left:30%; " type="submit" class="btn btn-info" name="" value="Add to Interesting URLS Table & Scrape the website">
 
 </form>
-
+<br>
 <form action="{% url 'scrapeApp:addtononpage' %}"  method="post">
   {% csrf_token %}
 
   <input type="hidden" name="take_url" value="{{ url }}">
-  <input type="submit" name="" value="Add To Not Intersting URLs">
+  <input type="submit" name="" class="btn btn-outline-danger" value="Add To Not Intersting URLs">
 </form>
 
 

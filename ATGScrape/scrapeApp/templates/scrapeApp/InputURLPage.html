@@ -3,13 +3,13 @@
 
 {% block bodyblock %}
 
-  <h2>Input Insider's URL:</h2><br>
+  <h2>Input urls from insider's web page:</h2><br>
 
   <form action="{% url 'scrapeApp:checkurlpage' %}" method="post" style=" text-align:  center; " >
     {% csrf_token %}
-      <input type="text" name="url" style=" width: 400px; " placeholder="Enter Websites url here to scrape!"><br><br>
+      <input type="text" name="url" style=" width: 400px; " placeholder="Enter Websites url here!"><br><br>
 
-      <input type="submit" name="" value="Check Out the Website">
+      <input type="submit" name="" class="btn btn-warning"  value="Load">
 
   </form>
 
