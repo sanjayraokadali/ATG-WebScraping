@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'scrapeApp/BasePage.html' %}
+
+
+{% block bodyblock %}
+
+  <div class="container">
+  <div class="row">
+  <div class="col-sm">
+    Interesting URLS:
+    <ul class="list-group">
+      {% for i in int %}
+      <li class="list-group-item"> <a href="{{i}}" target="_blank" >{{ i }}</a></li>
+      {% endfor %}
+    </ul>
+
+  </div>
+  <div class="col-sm">
+    Not Interesting URLS:
+    <ul class="list-group">
+      {% for i in not %}
+      <li class="list-group-item"> <a href="{{i}}" target="_blank" >{{ i }}</a></li>
+      {% endfor %}
+    </ul>
+
+  </div>
+
+  </div>
+  </div>
+
+
+{% endblock %}

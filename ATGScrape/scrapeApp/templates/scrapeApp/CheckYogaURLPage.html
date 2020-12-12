@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% extends 'scrapeApp/BasePage.html' %}
+
+
+
+
+{% block bodyblock %}
+
+<form  action="{% url 'scrapeApp:naadyogadatapage' %}" method="post">
+  {% csrf_token %}
+  <br><br>
+  <h5 style=" text-align: center; " >Contents of {{ url }}:</h5>
+  <input type="hidden" name="url" value="{{ url }}">
+    <iframe src="{{ url }}" width="1000" height="400" style=" border-color: black; "  >
+    </iframe>
+
+    <input style=" text-align: center; " type="submit" name="" value="Scrape the website">
+
+</form>
+
+<form action="{% url 'scrapeApp:addtononpage' %}"  method="post">
+  {% csrf_token %}
+
+  <input type="hidden" name="take_url" value="{{ url }}">
+  <input type="submit" name="" value="Add To Not Intersting URLs">
+</form>
+
+
+{% endblock %}

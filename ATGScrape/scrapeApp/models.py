@@ -12,3 +12,32 @@ class EventModel(models.Model):
     def __str__(self):
 
         return self.event_name
+
+class YogaModel(models.Model):
+
+    name = models.CharField(max_length=264)
+    postcode = models.CharField(max_length=264)
+    qualification = models.CharField(max_length=264)
+    vision = models.TextField()
+    link = models.URLField()
+
+    def __str__(self):
+
+        return self.name
+
+
+class InterestingURLModel(models.Model):
+
+    interesting_url = models.URLField()
+
+    def __str__(self):
+
+        return self.interesting_url
+
+class NotInterestingURLModel(models.Model):
+
+    not_interesting_url = models.URLField()
+
+    def __str__(self):
+
+        return self.not_interesting_url
