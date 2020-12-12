@@ -25,6 +25,17 @@ class YogaModel(models.Model):
 
         return self.name
 
+class HighModel(models.Model):
+
+    event_name = models.CharField(max_length=264)
+    location = models.CharField(max_length=365)
+    date = models.CharField(max_length=254)
+    category = models.CharField(max_length=243)
+
+    def __str__(self):
+
+        return self.event_name
+
 
 class InterestingURLModel(models.Model):
 

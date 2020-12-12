@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends 'scrapeApp/BasePage.html' %}
+
+
+{% block bodyblock %}
+<h2>NaadYoga</h2>
+
+<div class="container">
+    {% for e in events %}
+    <div class="row">
+      <div class="col-sm">
+        <ul class="list-group">
+        <li class="list-group-item">{{ e.name }}</li>
+        <li class="list-group-item"> {{ e.location }}</li>
+        <li class="list-group-item">{{ e.date }}</li>
+        <li class="list-group-item"> {{ e.category }}</li>
+        <br>
+        </ul>
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+
+
+{% endblock %}

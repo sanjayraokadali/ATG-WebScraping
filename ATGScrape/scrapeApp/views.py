@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 from scrapeApp.models import InterestingURLModel,NotInterestingURLModel
-from scrapeApp.models import YogaModel
+from scrapeApp.models import YogaModel,HighModel
 # Create your views here.
 def BasePage(request):
 
@@ -120,29 +120,73 @@ def EventsHighURLPage(request):
 
 def EventsHighDataPage(request):
 
-    url = request.POST.get('url')
-
-    data = InterestingURLModel.objects.create(interesting_url = url)
-    data.save()
-
-
-    url_li = url.split('/')
-    location = ''.join(url_li[len(url_li)-1])
-
-    html_text = requests.get(url).text
-    soup = BeautifulSoup(html_text, 'lxml')
-    events = soup.find_all('div', class_ = 'p-lr-sm-16 t-container browse-events-wrp')
+    events = HighModel.objects.order_by('event_name')
+    ordered = sorted(events, key=operator.attrgetter('event_name'))
+    flag = True
 
 
-    for e in events:
+    if request.method == 'POST':
 
-        event_name = e.find('div', class_='truncate f-s-16 f-s-sm-12 l-h-1p5 color-dark-grey' ).text
+        url = request.POST.get('url')
 
-        print(event_name)
+        data = InterestingURLModel.objects.create(interesting_url = url)
+        data.save()
 
 
 
-    return render(request,'scrapeApp/EventsHighDataPage.html')
+        html_text = requests.get(url).text
+        soup = BeautifulSoup(html_text, 'lxml')
+
+        event_names = soup.find_all('div', class_ = 'truncate f-s-16 f-s-sm-12 l-h-1p5 color-dark-grey')
+        locations = soup.find_all('div', class_ = 'truncate f-s-16 f-s-sm-12 l-h-1p5 color-light-grey text-capitalize')
+        dates = soup.find_all('div' , class_ = 'truncate f-s-16 f-s-sm-12 f-w-500 l-h-1p5 color-dark-grey')
+        category = soup.find_all('a' , class_ = 'category-pill d-inline-block f-s-12 f-s-sm-8 f-w-sm-500 text-capitalize')
+
+
+        for e,l,d,c in zip(event_names,locations,dates,category):
+
+            name = e.text
+            location = l.text
+            date = d.text
+            category = c.text
+
+            if HighModel.objects.count() == 0:
+
+                high = HighModel.objects.create(event_name = name, location = location, date = date, category = category)
+                high.save()
+            else:
+
+                names = HighModel.objects.all().values()
+                names = list(names)
+                temp = []
+
+                for i in range(len(names)):
+                    temp.append(names[i]['event_name'])
+                if name not in temp:
+                    flag =False
+                    high = HighModel.objects.create(event_name = name, location = location, date = date, category = category)
+                    high.save()
+
+
+    if flag == False:
+
+        events = HighModel.objects.order_by('event_name')
+        ordered = sorted(events, key=operator.attrgetter('event_name'))
+        file = open('high_event.csv', 'w', encoding='utf-8')
+        writer = csv.writer(file)
+
+        writer.writerow(['EVENT NAME','LOCATION','DATE','CATEGORY',])
+
+        for item in ordered:
+            writer.writerow([item.event_name,item.location,item.date,item.category])
+        file.close()
+
+        df = pd.read_csv('high_event.csv', encoding='utf-8')
+
+        df.to_excel('high_event.xlsx', index = False, encoding='utf-8')
+
+
+    return render(request,'scrapeApp/EventsHighDataPage.html',{'events':ordered})
 
 
 def NaadYogaURLPage(request):
